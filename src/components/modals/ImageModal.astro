@@ -1,0 +1,250 @@
+---
+
+---
+
+<div id="imageModal" class="modal">
+  <span class="close-modal">&times;</span>
+  <img
+    loading="lazy"
+    class="modal-content"
+    id="modalImage"
+    alt="Certificate Preview"
+  />
+  <div class="modal-caption" id="modalCaption"></div>
+
+  <div class="modal-nav modal-prev" id="modalPrev">
+    <i class="fas fa-chevron-left"></i>
+  </div>
+  <div class="modal-nav modal-next" id="modalNext">
+    <i class="fas fa-chevron-right"></i>
+  </div>
+  <div class="modal-counter" id="modalCounter"></div>
+
+  <div class="zoom-toolbar">
+    <button class="zoom-btn" id="zoomOutBtn" title="Perkecil">−</button>
+    <button class="zoom-btn" id="zoomResetBtn" title="Reset">⟳</button>
+    <button class="zoom-btn" id="zoomInBtn" title="Perbesar">+</button>
+  </div>
+</div>
+
+<script>
+  declare global {
+    interface Window {
+      openModal: (imageSrc: string, caption?: string) => void;
+      openImageSet: (images: string[], caption?: string) => void;
+    }
+  }
+
+  const modal = document.getElementById("imageModal");
+  const modalImg = document.getElementById(
+    "modalImage",
+  ) as HTMLImageElement | null;
+  const modalCaption = document.getElementById("modalCaption");
+  const closeModal = document.querySelector(".close-modal");
+
+  let currentZoom = 1;
+  let isPanning = false;
+  let startX = 0;
+  let startY = 0;
+  let translateX = 0;
+  let translateY = 0;
+
+  let currentImageSet: string[] = [];
+  let currentImageIndex = 0;
+  let currentSetCaption = "";
+
+  function resetTransform() {
+    currentZoom = 1;
+    translateX = 0;
+    translateY = 0;
+    updateTransform();
+  }
+
+  function updateTransform() {
+    if (!modalImg) return;
+    modalImg.style.transform = `translate(-50%, -50%) scale(${currentZoom}) translate(${translateX}px, ${translateY}px)`;
+  }
+
+  function zoomIn() {
+    if (currentZoom < 3) {
+      currentZoom = Math.min(3, currentZoom + 0.2);
+      updateTransform();
+    }
+  }
+
+  function zoomOut() {
+    if (currentZoom > 0.5) {
+      currentZoom = Math.max(0.5, currentZoom - 0.2);
+      updateTransform();
+    }
+  }
+
+  window.openModal = function (imageSrc: string, caption?: string) {
+    if (!modal || !modalImg || !modalCaption) {
+      window.open(imageSrc, "_blank");
+      return;
+    }
+
+    currentImageSet = [];
+    currentImageIndex = 0;
+    currentSetCaption = "";
+
+    const modalPrev = document.getElementById("modalPrev");
+    const modalNext = document.getElementById("modalNext");
+    const modalCounter = document.getElementById("modalCounter");
+    if (modalPrev) modalPrev.style.display = "none";
+    if (modalNext) modalNext.style.display = "none";
+    if (modalCounter) modalCounter.style.display = "none";
+
+    modal.style.display = "block";
+    modalImg.src = imageSrc;
+    modalCaption.textContent = caption || "Sertifikat";
+    document.body.style.overflow = "hidden";
+    resetTransform();
+    modalImg.style.position = "absolute";
+    modalImg.style.top = "50%";
+    modalImg.style.left = "50%";
+  };
+
+  window.openImageSet = function (images: string[], caption?: string) {
+    if (!images || images.length === 0 || !modal || !modalImg || !modalCaption)
+      return;
+    currentImageSet = images;
+    currentImageIndex = 0;
+    currentSetCaption = caption || "";
+
+    modalImg.src = currentImageSet[0];
+    modalCaption.textContent =
+      currentSetCaption +
+      (currentImageSet.length > 1 ? ` (1/${currentImageSet.length})` : "");
+
+    const modalPrev = document.getElementById("modalPrev");
+    const modalNext = document.getElementById("modalNext");
+    const modalCounter = document.getElementById("modalCounter");
+
+    if (currentImageSet.length > 1) {
+      if (modalPrev) modalPrev.style.display = "flex";
+      if (modalNext) modalNext.style.display = "flex";
+      if (modalCounter) {
+        modalCounter.style.display = "block";
+        modalCounter.textContent = `1 / ${currentImageSet.length}`;
+      }
+    } else {
+      if (modalPrev) modalPrev.style.display = "none";
+      if (modalNext) modalNext.style.display = "none";
+      if (modalCounter) modalCounter.style.display = "none";
+    }
+
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
+    resetTransform();
+    modalImg.style.position = "absolute";
+    modalImg.style.top = "50%";
+    modalImg.style.left = "50%";
+  };
+
+  function nextImage() {
+    if (!modalImg || !modalCaption) return;
+    if (currentImageIndex < currentImageSet.length - 1) {
+      currentImageIndex++;
+      modalImg.src = currentImageSet[currentImageIndex];
+      modalCaption.textContent =
+        currentSetCaption +
+        ` (${currentImageIndex + 1}/${currentImageSet.length})`;
+      const modalCounter = document.getElementById("modalCounter");
+      if (modalCounter)
+        modalCounter.textContent = `${currentImageIndex + 1} / ${currentImageSet.length}`;
+      resetTransform();
+    }
+  }
+
+  function prevImage() {
+    if (!modalImg || !modalCaption) return;
+    if (currentImageIndex > 0) {
+      currentImageIndex--;
+      modalImg.src = currentImageSet[currentImageIndex];
+      modalCaption.textContent =
+        currentSetCaption +
+        ` (${currentImageIndex + 1}/${currentImageSet.length})`;
+      const modalCounter = document.getElementById("modalCounter");
+      if (modalCounter)
+        modalCounter.textContent = `${currentImageIndex + 1} / ${currentImageSet.length}`;
+      resetTransform();
+    }
+  }
+
+  document.getElementById("modalPrev")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    prevImage();
+  });
+  document.getElementById("modalNext")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    nextImage();
+  });
+
+  if (modalImg) {
+    modalImg.addEventListener("mousedown", (e) => {
+      if (currentZoom > 1) {
+        isPanning = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        modalImg.style.cursor = "grabbing";
+        e.preventDefault();
+      }
+    });
+  }
+
+  document.addEventListener("mousemove", (e) => {
+    if (isPanning && currentZoom > 1) {
+      translateX = e.clientX - startX;
+      translateY = e.clientY - startY;
+      translateX = Math.min(200, Math.max(-200, translateX));
+      translateY = Math.min(200, Math.max(-200, translateY));
+      updateTransform();
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    isPanning = false;
+    if (modalImg) modalImg.style.cursor = "grab";
+  });
+
+  if (modalImg) {
+    modalImg.addEventListener("wheel", (e) => {
+      e.deltaY < 0 ? zoomIn() : zoomOut();
+      e.preventDefault();
+    });
+  }
+
+  document.getElementById("zoomInBtn")?.addEventListener("click", zoomIn);
+  document.getElementById("zoomOutBtn")?.addEventListener("click", zoomOut);
+  document
+    .getElementById("zoomResetBtn")
+    ?.addEventListener("click", resetTransform);
+
+  if (closeModal) {
+    (closeModal as HTMLElement).onclick = function () {
+      if (modal) modal.style.display = "none";
+      document.body.style.overflow = "auto";
+      resetTransform();
+    };
+  }
+
+  if (modal) {
+    modal.onclick = function (e) {
+      if (e.target === modal) {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+        resetTransform();
+      }
+    };
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && modal && modal.style.display === "block") {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+      resetTransform();
+    }
+  });
+</script>

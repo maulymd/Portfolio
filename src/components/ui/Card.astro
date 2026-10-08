@@ -1,0 +1,30 @@
+---
+interface Props {
+  featured?: boolean;
+  comingSoon?: boolean;
+  class?: string;
+}
+
+const { featured = false, comingSoon = false, class: className = "" } = Astro.props;
+---
+
+<div class:list={["card", { featured, "coming-soon": comingSoon }, className]}>
+  {featured && (
+    <div class="featured-badge">
+      <i class="fas fa-star"></i> Featured
+    </div>
+  )}
+  {comingSoon ? (
+    <>
+      <div class="coming-soon-overlay">
+        <i class="fas fa-code-branch"></i>
+        <span>Coming Soon</span>
+      </div>
+      <div class="card-content">
+        <slot />
+      </div>
+    </>
+  ) : (
+    <slot />
+  )}
+</div>

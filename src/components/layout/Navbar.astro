@@ -1,0 +1,84 @@
+---
+---
+
+<nav class="navbar">
+  <div class="container nav-container">
+    <a href="#home" class="logo">Maulana.</a>
+
+    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about" data-i18n="nav.about">Tentang</a></li>
+      <li><a href="#experience" data-i18n="nav.experience">Pengalaman</a></li>
+      <li><a href="#education" data-i18n="nav.education">Pendidikan</a></li>
+      <li><a href="#projects" data-i18n="nav.projects">Proyek</a></li>
+      <li><a href="#skills" data-i18n="nav.skills">Keahlian</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Kontak</a></li>
+    </ul>
+
+    <div class="nav-controls">
+      <div class="lang-switch">
+        <button class="lang-switch-btn" id="langIdBtn" type="button" onclick="setLanguage('id')">ID</button>
+        <button class="lang-switch-btn" id="langEnBtn" type="button" onclick="setLanguage('en')">EN</button>
+      </div>
+      <button class="dark-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<script>
+  // Hamburger menu toggle
+  const hamburger = document.getElementById('hamburgerBtn');
+  const navLinks = document.getElementById('navLinks');
+  const menuOverlay = document.getElementById('menuOverlay');
+
+  function toggleMenu() {
+    if (!hamburger || !navLinks) return;
+    hamburger.classList.toggle('active');
+    navLinks.classList.toggle('mobile-open');
+    if (menuOverlay) menuOverlay.classList.toggle('active');
+    document.body.style.overflow = navLinks.classList.contains('mobile-open') ? 'hidden' : '';
+  }
+
+  function closeMenu() {
+    if (!hamburger || !navLinks) return;
+    hamburger.classList.remove('active');
+    navLinks.classList.remove('mobile-open');
+    if (menuOverlay) menuOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  hamburger?.addEventListener('click', toggleMenu);
+  menuOverlay?.addEventListener('click', closeMenu);
+  navLinks?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) closeMenu();
+  });
+
+  // Dark mode toggle
+  const toggleBtn = document.getElementById('darkModeToggle');
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark');
+    if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+  } else {
+    if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+  }
+
+  toggleBtn?.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    toggleBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+  });
+</script>

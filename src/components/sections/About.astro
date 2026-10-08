@@ -1,0 +1,107 @@
+---
+import SectionTitle from "../ui/SectionTitle.astro";
+import SkillTag from "../ui/SkillTag.astro";
+import personal from "../../data/personal.json";
+---
+
+<section id="about">
+  <div class="container">
+    <SectionTitle i18nKey="about.title" defaultText="Tentang Saya" />
+    <div
+      style="display: flex; flex-wrap: wrap; gap: 40px; align-items: center;"
+    >
+      <div style="flex: 1; min-width: 200px; text-align: center;">
+        <div
+          style="width: 200px; height: 200px; margin: 0 auto; border-radius: 50%; overflow: hidden; border: 4px solid var(--accent); box-shadow: var(--shadow-lg); background: var(--bg-secondary);"
+        >
+          <img
+            loading="lazy"
+            src={personal.profileImage}
+            alt="Maulana Yusuf Ahmadi"
+            style="width: 100%; height: 100%; object-fit: cover; object-position: center center;"
+            onerror="this.src='https://via.placeholder.com/200x200?text=Maulana'"
+          />
+        </div>
+        <div style="margin-top: 16px;">
+          <span class="skill-tag">Maulana Yusuf Ahmadi</span>
+        </div>
+      </div>
+
+      <div style="flex: 2; min-width: 250px;">
+        <p
+          style="margin-bottom: 16px; font-size: 1.05rem;"
+          data-i18n="about.p1"
+        >
+          Lulusan S1 Informatika dari <strong
+            >Universitas Islam Negeri Sunan Kalijaga Yogyakarta</strong
+          > dengan IPK 3.72/4.00. Memiliki passion kuat dalam <strong
+            >Software Quality Assurance (QA)</strong
+          > serta latar belakang pengembangan web dan mobile.
+        </p>
+        <p style="margin-bottom: 16px;" data-i18n="about.p2">
+          Pengalaman dalam pengembangan aplikasi memberikan pemahaman mendalam
+          dari sisi teknis, sehingga memungkinkan perancangan dan eksekusi
+          pengujian secara efektif dan presisi — baik melalui <strong
+            >manual testing</strong
+          > maupun <strong>automated testing</strong>.
+        </p>
+        <p style="margin-bottom: 16px;" data-i18n="about.p3">
+          Terbiasa menguji sistem web & mobile (POS, CRM, healthcare system),
+          merancang test case dari PRD & Figma, mengotomasi API & UI dengan <strong
+            >Playwright, Cypress, Katalon Studio</strong
+          >, serta berkolaborasi erat dengan tim developer.
+        </p>
+        <div class="skills-wrapper" style="margin-top: 20px;">
+          <SkillTag
+            icon="fas fa-graduation-cap"
+            name="S1 Informatika UIN Suka (IPK 3.72)"
+            i18nKey="about.tag1"
+          />
+          <SkillTag
+            icon="fas fa-mobile-alt"
+            name="Bangkit Academy Mobile Dev"
+            i18nKey="about.tag2"
+          />
+          <SkillTag
+            icon="fas fa-vial"
+            name="Playwright & Cypress"
+            i18nKey="about.tag3"
+          />
+          <SkillTag
+            icon="fas fa-robot"
+            name="Katalon Studio Automation"
+            i18nKey="about.tag4"
+          />
+          <SkillTag
+            icon="fas fa-award"
+            name="Mahasiswa Berprestasi Wonogiri"
+            i18nKey="about.tag5"
+          />
+        </div>
+      </div>
+
+      <div
+        style="flex: 1; min-width: 200px; background: var(--bg-secondary); border-radius: 20px; padding: 20px; text-align: center;"
+      >
+        <i
+          class="fas fa-user-check"
+          style="font-size: 1.5rem; color: var(--accent);"></i>
+        <p
+          style="margin: 12px 0 0 0; font-size: 0.9rem;"
+          data-i18n="about.summary"
+        >
+          QA Engineer yang berdedikasi menjaga kualitas dan stabilitas perangkat
+          lunak melalui pengujian manual dan otomasi yang terstruktur.
+        </p>
+        <hr style="margin: 16px 0; border-color: var(--border);" />
+        <p
+          style="font-size: 0.85rem; color: var(--text-muted);"
+          data-i18n="about.summary2"
+        >
+          Berpengalaman berkolaborasi dalam siklus rilis Agile dan pelaporan bug
+          yang mendalam.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,19 @@
+[
+  {
+    "id": "proj3",
+    "titleKey": "proj3.title",
+    "dateKey": "proj3.date",
+    "descKey": "proj3.desc",
+    "icon": "fas fa-cash-register",
+    "category": "manual",
+    "featured": true,
+    "tags": [
+      "Manual Testing",
+      "Test Case Design",
+      "POS & CRM",
+      "UAT",
+      "Sanity Testing",
+      "Figma"
+    ]
+  }
+]

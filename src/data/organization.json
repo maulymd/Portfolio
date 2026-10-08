@@ -1,0 +1,36 @@
+[
+  {
+    "titleKey": "org1.title",
+    "dateKey": "org1.date",
+    "descKey": "org1.desc",
+    "icon": "fas fa-gavel",
+    "certificate": {
+      "image": "/Asset/Sertif-BEM.png",
+      "caption": "Sertifikat Gubernur Badan Eksekutif Mahasiswa Fakultas Teknik"
+    }
+  },
+  {
+    "titleKey": "org2.title",
+    "dateKey": "org2.date",
+    "descKey": "org2.desc",
+    "icon": "fas fa-users"
+  },
+  {
+    "titleKey": "org3.title",
+    "dateKey": "org3.date",
+    "descKey": "org3.desc",
+    "icon": "fas fa-landmark"
+  },
+  {
+    "titleKey": "org4.title",
+    "dateKey": "org4.date",
+    "descKey": "org4.desc",
+    "icon": "fas fa-chart-line"
+  },
+  {
+    "titleKey": "org5.title",
+    "dateKey": "org5.date",
+    "descKey": "org5.desc",
+    "icon": "fas fa-chalkboard-teacher"
+  }
+]

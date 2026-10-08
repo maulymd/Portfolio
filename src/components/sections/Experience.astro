@@ -1,0 +1,67 @@
+---
+import experience from "../../data/experience.json";
+import Card from "../ui/Card.astro";
+import SectionTitle from "../ui/SectionTitle.astro";
+---
+
+<section id="experience">
+  <div class="container">
+    <SectionTitle i18nKey="experience.title" defaultText="Pengalaman Kerja" />
+    <div class="grid">
+      {experience.map(item => (
+        <Card>
+          <h3>
+            <i class={item.icon} style="color: var(--accent); margin-right: 10px;"></i>
+            <span data-i18n={item.companyKey || item.titleKey}>{item.companyKey || item.titleKey}</span>
+          </h3>
+          {item.roleKey && <div class="role" data-i18n={item.roleKey}>{item.roleKey}</div>}
+          <div class="date" data-i18n={item.dateKey}>{item.dateKey}</div>
+          <ul>
+            {item.tasks.map(task => (
+              <li data-i18n={task} set:html={task} />
+            ))}
+          </ul>
+
+          {item.certificate && (
+            <div class="project-links">
+              {item.certificate.images ? (
+                <a
+                  href="javascript:void(0)"
+                  class="project-link"
+                  onclick={`openImageSet(${JSON.stringify(item.certificate.images)}, '${item.certificate.caption}')`}
+                >
+                  <i class="fas fa-certificate"></i> <span data-i18n="cert.view">Lihat Sertifikat</span> →
+                </a>
+              ) : (
+                <a
+                  href="javascript:void(0)"
+                  class="project-link"
+                  onclick={`openModal('${item.certificate.image}', '${item.certificate.caption}')`}
+                >
+                  <i class="fas fa-certificate"></i> <span data-i18n="cert.view">Lihat Sertifikat</span> →
+                </a>
+              )}
+            </div>
+          )}
+
+          {item.certificates && (
+            <div style="margin-top: 16px;">
+              <strong><i class="fas fa-certificate"></i> <span data-i18n="cert.view">Lihat Sertifikat</span> :</strong>
+              <div class="project-links" style="margin-top: 8px;">
+                {item.certificates.map(cert => (
+                  <a
+                    href="javascript:void(0)"
+                    class="project-link"
+                    onclick={`openModal('${cert.image}', '${cert.caption}')`}
+                  >
+                    <i class={cert.icon}></i> {cert.title} →
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>

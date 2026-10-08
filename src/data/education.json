@@ -1,0 +1,16 @@
+[
+  {
+    "id": "edu1",
+    "nameKey": "edu.uni",
+    "dateKey": "edu.uniDate",
+    "descKey": "edu.uniDesc",
+    "icon": "fas fa-university"
+  },
+  {
+    "id": "edu2",
+    "nameKey": "edu.bangkit",
+    "dateKey": "edu.bangkitDate",
+    "descKey": "edu.bangkitDesc",
+    "icon": "fas fa-graduation-cap"
+  }
+]

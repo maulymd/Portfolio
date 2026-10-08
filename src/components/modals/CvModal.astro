@@ -1,0 +1,56 @@
+---
+import personal from "../../data/personal.json";
+---
+
+<div id="cvModal" class="cv-modal" style="display:none;">
+  <div class="cv-modal-content">
+    <span class="cv-modal-close" onclick="closeCvModal()">&times;</span>
+    <h3 data-i18n="cv.modal">Pilih Bahasa CV</h3>
+    <p data-i18n="cv.optdesc">Silakan pilih versi CV yang ingin diunduh:</p>
+    <div class="cv-modal-buttons">
+      <a href={personal.cvLinks.id} download class="btn btn-primary">
+        <i class="fas fa-file-pdf"></i> Bahasa Indonesia
+      </a>
+      <a href={personal.cvLinks.en} download class="btn btn-primary">
+        <i class="fas fa-file-pdf"></i> English Language
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Download CV Button -->
+<div class="floating-cv">
+  <a href="javascript:void(0)" onclick="openCvModal()" class="btn-cv-download">
+    <i class="fas fa-download"></i>
+    <span data-i18n="cv.download">Download CV</span>
+  </a>
+</div>
+
+<script>
+  declare global {
+    interface Window {
+      openCvModal: () => void;
+      closeCvModal: () => void;
+    }
+  }
+
+  window.openCvModal = function() {
+    const cvModal = document.getElementById('cvModal');
+    if (cvModal) {
+      cvModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  window.closeCvModal = function() {
+    const cvModal = document.getElementById('cvModal');
+    if (cvModal) {
+      cvModal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  };
+
+  document.getElementById('cvModal')?.addEventListener('click', function(e) {
+    if (e.target === this) window.closeCvModal();
+  });
+</script>

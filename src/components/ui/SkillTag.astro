@@ -1,0 +1,14 @@
+---
+interface Props {
+  name: string;
+  icon?: string;
+  i18nKey?: string;
+}
+
+const { name, icon, i18nKey } = Astro.props;
+---
+
+<span class="skill-tag">
+  {icon && <i class={icon} style="margin-right: 6px;"></i>}
+  {i18nKey ? <span data-i18n={i18nKey}>{name}</span> : name}
+</span>

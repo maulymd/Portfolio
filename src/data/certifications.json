@@ -1,0 +1,13 @@
+[
+  {
+    "id": "cert3",
+    "icon": "fa-solid fa-file-shield",
+    "nameKey": "cert3.name",
+    "descKey": "cert3.desc",
+    "images": [
+      "/Asset/sertifikat-Cisco-Certified-Support-Technician-Cybersecurity.png",
+      "/Asset/sertifikat-Cisco-Hasil-Cybersecurity.png"
+    ],
+    "caption": "CCST Cybersecurity Certificate & Score Report"
+  }
+]

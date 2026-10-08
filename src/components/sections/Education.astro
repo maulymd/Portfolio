@@ -1,0 +1,23 @@
+---
+import education from "../../data/education.json";
+import Card from "../ui/Card.astro";
+import SectionTitle from "../ui/SectionTitle.astro";
+---
+
+<section id="education">
+  <div class="container">
+    <SectionTitle i18nKey="education.title" defaultText="Pendidikan" />
+    <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+      {education.map(item => (
+        <Card>
+          <h3>
+            <i class={item.icon} style="color: var(--accent); margin-right: 10px;"></i>
+            <span data-i18n={item.nameKey}>{item.nameKey}</span>
+          </h3>
+          <div class="date" data-i18n={item.dateKey}>{item.dateKey}</div>
+          <p data-i18n={item.descKey}>{item.descKey}</p>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>

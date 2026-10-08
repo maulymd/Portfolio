@@ -1,0 +1,164 @@
+---
+import projects from "../../data/projects.json";
+import Card from "../ui/Card.astro";
+import SectionTitle from "../ui/SectionTitle.astro";
+import SkillTag from "../ui/SkillTag.astro";
+---
+
+<section id="projects">
+  <div class="container">
+    <SectionTitle
+      i18nKey="projects.title"
+      defaultText="Proyek & Pengujian Unggulan"
+    />
+
+    <!-- Project Filter Buttons -->
+    <div class="project-filter-bar">
+      <button class="project-filter-btn active" data-filter="all">
+        <i class="fas fa-layer-group"></i> Semua Proyek
+      </button>
+      <button class="project-filter-btn" data-filter="automation">
+        <i class="fas fa-robot"></i> Automation (E2E)
+      </button>
+      <button class="project-filter-btn" data-filter="api">
+        <i class="fas fa-network-wired"></i> API Testing
+      </button>
+      <button class="project-filter-btn" data-filter="mobile">
+        <i class="fas fa-mobile-alt"></i> Mobile QA
+      </button>
+      <button class="project-filter-btn" data-filter="manual">
+        <i class="fas fa-clipboard-check"></i> Manual & UAT
+      </button>
+    </div>
+
+    <div class="grid" id="projectsGrid">
+      {
+        projects.map((proj) => (
+          <div class="project-item" data-category={proj.category || "all"}>
+            <Card featured={proj.featured}>
+              <h3>
+                <i
+                  class={proj.icon}
+                  style="color: var(--accent); margin-right: 8px;"
+                />{" "}
+                <span data-i18n={proj.titleKey}>{proj.titleKey}</span>
+              </h3>
+              <div class="date">
+                <span data-i18n={proj.dateKey}>{proj.dateKey}</span>
+              </div>
+              <p>
+                <span data-i18n={proj.descKey}>{proj.descKey}</span>
+              </p>
+
+              {proj.tags && (
+                <div class="skills-wrapper" style="margin-top: 14px;">
+                  {proj.tags.map((tag) => (
+                    <SkillTag name={tag} />
+                  ))}
+                </div>
+              )}
+            </Card>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .project-filter-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .project-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.25s ease;
+  }
+
+  .project-filter-btn i {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    transition: color 0.2s;
+  }
+
+  .project-filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .project-filter-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+    box-shadow: 0 4px 14px var(--accent-glow);
+  }
+
+  .project-filter-btn.active i {
+    color: #ffffff;
+  }
+
+  .project-item {
+    transition: all 0.35s ease;
+  }
+
+  .project-item.hidden {
+    display: none;
+  }
+
+  @keyframes cardFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .project-item.animate-in {
+    animation: cardFadeIn 0.35s ease forwards;
+  }
+</style>
+
+<script>
+  const filterBtns = document.querySelectorAll(".project-filter-btn");
+  const projectItems = document.querySelectorAll(".project-item");
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      filterBtns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const filter = btn.getAttribute("data-filter");
+
+      projectItems.forEach((item) => {
+        const cat = item.getAttribute("data-category");
+        if (filter === "all" || cat === filter) {
+          item.classList.remove("hidden");
+          item.classList.remove("animate-in");
+          // Trigger reflow for smooth animation restart
+          void (item as HTMLElement).offsetWidth;
+          item.classList.add("animate-in");
+        } else {
+          item.classList.add("hidden");
+        }
+      });
+    });
+  });
+</script>

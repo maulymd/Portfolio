@@ -1,0 +1,30 @@
+/* ==================== ANIMATIONS ==================== */
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes popupFadeIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes featuredGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(245, 176, 65, 0.7);
+        border-color: #F5B041;
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(245, 176, 65, 0.3);
+        border-color: #F5B041;
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(245, 176, 65, 0);
+        border-color: #F5B041;
+    }
+}

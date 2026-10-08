@@ -1,0 +1,39 @@
+---
+import certifications from "../../data/certifications.json";
+import Card from "../ui/Card.astro";
+import SectionTitle from "../ui/SectionTitle.astro";
+---
+
+<section id="certifications">
+  <div class="container">
+    <SectionTitle i18nKey="cert.title" defaultText="Sertifikasi" />
+    <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+      {certifications.map(item => (
+        <Card>
+          <i class={item.icon} style="font-size: 1.8rem;"></i>
+          <h3 style="margin-top: 10px;" data-i18n={item.nameKey}>{item.nameKey}</h3>
+          <p data-i18n={item.descKey}>{item.descKey}</p>
+          <div class="project-links">
+            {item.images ? (
+              <a
+                href="javascript:void(0)"
+                class="project-link"
+                onclick={`openImageSet(${JSON.stringify(item.images)}, '${item.caption}')`}
+              >
+                <i class="fas fa-certificate"></i> <span data-i18n="cert.view">Lihat Sertifikat</span> →
+              </a>
+            ) : item.image ? (
+              <a
+                href="javascript:void(0)"
+                class="project-link"
+                onclick={`openModal('${item.image}', '${item.caption}')`}
+              >
+                <i class="fas fa-certificate"></i> <span data-i18n="cert.view">Lihat Sertifikat</span> →
+              </a>
+            ) : null}
+          </div>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>

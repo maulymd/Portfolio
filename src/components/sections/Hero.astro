@@ -1,0 +1,70 @@
+---
+import personal from "../../data/personal.json";
+import translations from "../../data/translations.json";
+import TestRunnerTerminal from "../ui/TestRunnerTerminal.astro";
+
+const idTranslations = translations.id as Record<string, string>;
+---
+
+<section id="home" class="hero">
+  <div class="container">
+    <div class="badge-container">
+      <span class="hero-badge" data-i18n="hero.badge1">Open to Work</span>
+      <span class="hero-badge" data-i18n="hero.badge2">Lulusan S1 Informatika 2025</span>
+      <span class="hero-badge" data-i18n="hero.badge3">🇮🇩 Yogyakarta, Indonesia</span>
+    </div>
+    <h1>Maulana Yusuf Ahmadi</h1>
+    <div class="typing-text" id="typingText"></div>
+    <div class="stats-container">
+      {personal.stats.map(stat => (
+        <div class="stat-item">
+          <div class="stat-number">{stat.number}</div>
+          <div class="stat-label" data-i18n={stat.labelKey}>
+            {idTranslations[stat.labelKey] || stat.labelKey}
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="contact-info-bar">
+      <a href={`mailto:${personal.email}`}><i class="fas fa-envelope"></i> {personal.email}</a>
+      <a href={`https://wa.me/${personal.whatsapp}`} target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> {personal.whatsappDisplay}</a>
+    </div>
+    <div style="margin-top: 30px;">
+      <a href="#projects" class="btn btn-primary" data-i18n="hero.btn1"><i class="fas fa-briefcase"></i> Lihat Portofolio</a>
+      <a href={`https://wa.me/${personal.whatsapp}`} target="_blank" rel="noopener noreferrer" class="btn btn-outline" data-i18n="hero.btn2"><i class="fab fa-whatsapp"></i> Hubungi Saya</a>
+    </div>
+
+    <!-- Live QA Test Runner Terminal -->
+    <TestRunnerTerminal />
+  </div>
+</section>
+
+<script define:vars={{ roles: personal.roles }}>
+  const words = roles && roles.length ? roles : ["Quality Assurance Engineer", "QA Automation Engineer", "Manual Tester", "Informatics Graduate UIN Sunan Kalijaga"];
+  let i = 0, j = 0, isDeleting = false;
+  const typingElement = document.getElementById("typingText");
+
+  if (typingElement) {
+    function typeEffect() {
+      const currentWord = words[i];
+      if (isDeleting) {
+        typingElement.textContent = currentWord.substring(0, j - 1);
+        j--;
+      } else {
+        typingElement.textContent = currentWord.substring(0, j + 1);
+        j++;
+      }
+      if (!isDeleting && j === currentWord.length) {
+        isDeleting = true;
+        setTimeout(typeEffect, 2000);
+      } else if (isDeleting && j === 0) {
+        isDeleting = false;
+        i = (i + 1) % words.length;
+        setTimeout(typeEffect, 500);
+      } else {
+        setTimeout(typeEffect, isDeleting ? 50 : 100);
+      }
+    }
+    typeEffect();
+  }
+</script>

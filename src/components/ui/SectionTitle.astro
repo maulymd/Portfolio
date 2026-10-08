@@ -1,0 +1,10 @@
+---
+interface Props {
+  i18nKey: string;
+  defaultText: string;
+}
+
+const { i18nKey, defaultText } = Astro.props;
+---
+
+<h2 class="section-title" data-i18n={i18nKey}>{defaultText}</h2>

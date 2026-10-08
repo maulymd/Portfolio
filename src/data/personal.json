@@ -1,0 +1,26 @@
+{
+  "name": "Maulana Yusuf Ahmadi",
+  "shortName": "Maulana",
+  "roles": [
+    "Quality Assurance Engineer",
+    "QA Automation Engineer",
+    "Manual Tester",
+    "Informatics Graduate UIN Sunan Kalijaga"
+  ],
+  "email": "maulanayusufahmd@gmail.com",
+  "whatsapp": "6285156621962",
+  "whatsappDisplay": "+62 851 5662 1962",
+  "linktree": "",
+  "linkedin": "https://www.linkedin.com/in/maulanayusufahmd/",
+  "github": "https://github.com/maulymd",
+  "profileImage": "/assets/profile.jpeg",
+  "stats": [
+    { "number": "1+", "labelKey": "hero.stat1" },
+    { "number": "3.72", "labelKey": "hero.stat2" },
+    { "number": "1", "labelKey": "hero.stat3" }
+  ],
+  "cvLinks": {
+    "id": "https://drive.google.com/file/d/1YE2TGibtHIkp7kdqS27qo1TvSDui-o8q/view?usp=sharing",
+    "en": "https://drive.google.com/file/d/1YE2TGibtHIkp7kdqS27qo1TvSDui-o8q/view?usp=sharing"
+  }
+}

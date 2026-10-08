@@ -1,0 +1,54 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  author?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+}
+
+const {
+  title = "Maulana Yusuf Ahmadi | QA Engineer Portfolio",
+  description = "Portfolio Maulana Yusuf Ahmadi - Quality Assurance Engineer lulusan S1 Informatika UIN Sunan Kalijaga (IPK 3.72). Berpengalaman dalam pengujian web & mobile, API automation (Playwright), mobile automation (Katalon Studio), dan automated testing (Cypress).",
+  keywords = "Maulana Yusuf Ahmadi, QA Engineer, Quality Assurance, Portfolio, Software Testing, Playwright, Cypress, Katalon Studio, Postman, Jira, UIN Sunan Kalijaga",
+  author = "Maulana Yusuf Ahmadi",
+  ogTitle = "Maulana Yusuf Ahmadi | QA Engineer Portfolio",
+  ogDescription = "QA Engineer dengan keahlian pengujian manual dan otomasi web & mobile (Playwright, Cypress, Katalon Studio, Postman).",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content={author} />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+    <link rel="icon" type="image/png" href="/Asset/favicon-badgecheck.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/e8191d8eec.js"
+      crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/src/styles/global.css" />
+    <link rel="stylesheet" href="/src/styles/animations.css" />
+    <link rel="stylesheet" href="/src/styles/components.css" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

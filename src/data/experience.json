@@ -1,0 +1,30 @@
+[
+  {
+    "companyKey": "exp0.company",
+    "roleKey": "exp0.role",
+    "dateKey": "exp0.date",
+    "icon": "fas fa-bug",
+    "tasks": ["exp0.l1", "exp0.l2", "exp0.l3", "exp0.l4", "exp0.l5", "exp0.l6"]
+  },
+  {
+    "companyKey": "exp1.company",
+    "roleKey": "exp1.role",
+    "dateKey": "exp1.date",
+    "icon": "fas fa-laptop-code",
+    "tasks": ["exp1.l1", "exp1.l2", "exp1.l3"]
+  },
+  {
+    "companyKey": "exp2.company",
+    "roleKey": "exp2.role",
+    "dateKey": "exp2.date",
+    "icon": "fas fa-hospital-user",
+    "tasks": ["exp2.l1", "exp2.l2", "exp2.l3"]
+  },
+  {
+    "companyKey": "exp3.company",
+    "roleKey": "exp3.role",
+    "dateKey": "exp3.date",
+    "icon": "fas fa-mobile-screen",
+    "tasks": ["exp3.l1"]
+  }
+]

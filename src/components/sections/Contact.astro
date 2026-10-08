@@ -1,0 +1,105 @@
+---
+import personal from "../../data/personal.json";
+import SectionTitle from "../ui/SectionTitle.astro";
+---
+
+<section id="contact">
+  <div class="container">
+    <SectionTitle i18nKey="contact.title" defaultText="Hubungi Saya" />
+    <div style="display: flex; flex-wrap: wrap; gap: 40px;">
+      <div style="flex: 1; min-width: 240px;">
+        <p style="margin-bottom: 12px;">
+          <i class="fas fa-envelope" style="width: 28px;"></i>
+          <a href={`mailto:${personal.email}`} style="color: var(--text-primary); text-decoration: none;">{personal.email}</a>
+        </p>
+        <p style="margin-bottom: 12px;">
+          <i class="fab fa-whatsapp" style="width: 28px;"></i>
+          <a href={`https://wa.me/${personal.whatsapp}`} target="_blank" rel="noopener noreferrer" style="color: var(--text-primary); text-decoration: none;">{personal.whatsappDisplay}</a>
+        </p>
+        <div class="social-links">
+          {personal.linkedin && <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>}
+          {personal.github && <a href={personal.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>}
+          {personal.linktree && <a href={personal.linktree} target="_blank" rel="noopener noreferrer" aria-label="Linktree"><i class="fas fa-tree"></i></a>}
+        </div>
+        <p style="margin-top: 20px;">
+          <strong><i data-i18n="contact.portfolio">Profil Profesional:</i></strong>{" "}
+          <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" class="project-link">linkedin.com/in/maulanayusufahmd</a>
+        </p>
+      </div>
+
+      <div style="flex: 2;">
+        <form id="realContactForm" class="contact-form">
+          <input type="text" placeholder="Nama Lengkap" id="formName" required data-i18n-placeholder="form.name" />
+          <input type="email" placeholder="Email" id="formEmail" required data-i18n-placeholder="form.email" />
+          <textarea rows="3" placeholder="Pesan / Tawaran Kerja / Kolaborasi..." id="formMsg" required data-i18n-placeholder="form.message"></textarea>
+          <button type="submit" class="btn btn-primary" id="submitBtn" data-i18n="form.send">
+            <i class="fas fa-paper-plane"></i> Kirim Pesan
+          </button>
+        </form>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 12px;" data-i18n="form.note">
+          *Pesan akan dibalas dengan waktu 1x24 jam
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const contactForm = document.getElementById('realContactForm') as HTMLFormElement | null;
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz5N_YLiNsI7ItE2p7XqSqBSph39ZBtnMAa7fGR4rz1ACYnpHAejQX9RJfmIb9_UYwP/exec';
+
+  function showToast(message: string, type: 'success' | 'error') {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notif';
+    toast.style.backgroundColor = type === 'error' ? '#dc2626' : '#10b981';
+    toast.innerHTML = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  }
+
+  contactForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = (document.getElementById('formName') as HTMLInputElement)?.value.trim();
+    const email = (document.getElementById('formEmail') as HTMLInputElement)?.value.trim();
+    const message = (document.getElementById('formMsg') as HTMLTextAreaElement)?.value.trim();
+    const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement | null;
+    const originalText = submitBtn ? submitBtn.innerHTML : 'Kirim';
+
+    if (!name || !email || !message) {
+      showToast("Harap lengkapi semua field!", "error");
+      return;
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      showToast("Email tidak valid!", "error");
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+    }
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('message', message);
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString()
+      });
+      showToast(`Terima kasih ${name}! Pesan Anda telah terkirim.`, "success");
+      contactForm.reset();
+    } catch (error) {
+      console.error("Error:", error);
+      showToast("Gagal mengirim. Silakan kirim email langsung ke maulanayusufahmd@gmail.com", "error");
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    }
+  });
+</script>

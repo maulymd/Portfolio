@@ -1,0 +1,142 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/layout/Navbar.astro";
+import Footer from "../components/layout/Footer.astro";
+import Hero from "../components/sections/Hero.astro";
+import About from "../components/sections/About.astro";
+import Education from "../components/sections/Education.astro";
+import Experience from "../components/sections/Experience.astro";
+import Projects from "../components/sections/Projects.astro";
+import Skills from "../components/sections/Skills.astro";
+import Contact from "../components/sections/Contact.astro";
+import LangPopup from "../components/modals/LangPopup.astro";
+import ImageModal from "../components/modals/ImageModal.astro";
+import CvModal from "../components/modals/CvModal.astro";
+import translations from "../data/translations.json";
+---
+
+<BaseLayout>
+  <LangPopup />
+  <ImageModal />
+  <CvModal />
+  <Navbar />
+
+  <main>
+    <Hero />
+    <About />
+    <Experience />
+    <Education />
+    <Projects />
+    <Skills />
+    <Contact />
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script define:vars={{ translations }}>
+  window.translations = translations;
+  let currentLang = "id";
+
+  window.applyLanguage = function (lang) {
+    currentLang = lang;
+    const t = window.translations[lang];
+    if (!t) return;
+
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (key && t[key]) {
+        if (
+          el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA" ||
+          el.tagName === "BUTTON"
+        ) {
+          if (el.hasAttribute("data-i18n-placeholder")) {
+            el.placeholder = t[key];
+          } else {
+            el.innerHTML = t[key];
+          }
+        } else {
+          el.innerHTML = t[key];
+        }
+      }
+    });
+
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (key && t[key]) {
+        el.placeholder = t[key];
+      }
+    });
+
+    const idBtn = document.getElementById("langIdBtn");
+    const enBtn = document.getElementById("langEnBtn");
+    if (idBtn && enBtn) {
+      if (lang === "id") {
+        idBtn.classList.add("active");
+        enBtn.classList.remove("active");
+      } else {
+        idBtn.classList.remove("active");
+        enBtn.classList.add("active");
+      }
+    }
+
+    localStorage.setItem("portfolioLang", lang);
+  };
+
+  window.setLanguage = function (lang) {
+    window.applyLanguage(lang);
+    const popup = document.getElementById("langPopup");
+    if (popup && popup.style.display !== "none") {
+      popup.style.opacity = "0";
+      setTimeout(() => {
+        popup.style.display = "none";
+      }, 400);
+    }
+  };
+
+  const savedLang = localStorage.getItem("portfolioLang");
+  if (savedLang && (savedLang === "id" || savedLang === "en")) {
+    const popup = document.getElementById("langPopup");
+    if (popup) popup.style.display = "none";
+    window.applyLanguage(savedLang);
+  } else {
+    window.applyLanguage("id");
+  }
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      const href = this.getAttribute("href");
+      if (!href || href === "#") return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  // Intersection Observer animations
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = "1";
+          entry.target.style.transform = "translateY(0)";
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
+  );
+
+  document
+    .querySelectorAll(".card, .org-card, .grid, .skills-wrapper, .contact-form, .skill-pillar-card, .test-terminal-wrapper")
+    .forEach((el) => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(20px)";
+      el.style.transition = "all 0.5s ease";
+      observer.observe(el);
+    });
+</script>

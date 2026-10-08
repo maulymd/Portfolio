@@ -1,0 +1,440 @@
+---
+
+---
+
+<div class="test-terminal-wrapper">
+  <div class="test-terminal">
+    <!-- Terminal Titlebar -->
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="dot dot-close"></span>
+        <span class="dot dot-minimize"></span>
+        <span class="dot dot-maximize"></span>
+      </div>
+      <div class="terminal-title">
+        <i class="fas fa-terminal"></i> maulana@qa-lab:~ / automated-test-runner
+      </div>
+      <div class="terminal-actions">
+        <span class="terminal-badge" id="terminalStatusBadge">READY</span>
+        <button
+          id="runTestsBtn"
+          class="terminal-btn-run"
+          aria-label="Run Test Suite"
+        >
+          <i class="fas fa-play"></i> Run Test Suite
+        </button>
+        <button
+          id="resetTestsBtn"
+          class="terminal-btn-reset"
+          aria-label="Reset Terminal"
+          style="display: none;"
+        >
+          <i class="fas fa-redo"></i> Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Terminal Screen -->
+    <div class="terminal-body" id="terminalScreen">
+      <div class="line prompt-line">
+        <span class="prompt-user">maulana@qa</span>:<span class="prompt-dir"
+          >~/portfolio-tests</span
+        >$ <span class="prompt-cmd"
+          >npx test-suite --target=production --all</span
+        >
+      </div>
+      <div class="line text-dim">
+        Automated QA Environment: Playwright v1.40 | Cypress v13.6 | Katalon
+        Engine
+      </div>
+      <div class="line text-dim">Target Systems: Web, Mobile, REST APIs</div>
+      <div class="line text-muted-cli" id="terminalPlaceholder">
+        [Info] Click <strong
+          style="color: var(--accent); cursor: pointer;"
+          onclick="document.getElementById('runTestsBtn').click()"
+          >"Run Test Suite"</strong
+        > above to simulate real-time automated execution.
+      </div>
+      <div id="terminalStream"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .test-terminal-wrapper {
+    width: 100%;
+    margin: 30px auto 10px;
+    max-width: 900px;
+  }
+
+  .test-terminal {
+    background: #0d131f;
+    border: 1px solid #1f293d;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow:
+      0 20px 40px -15px rgba(0, 0, 0, 0.6),
+      0 0 25px rgba(16, 185, 129, 0.08);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85rem;
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .test-terminal:hover {
+    border-color: rgba(16, 185, 129, 0.4);
+    box-shadow:
+      0 25px 50px -15px rgba(0, 0, 0, 0.7),
+      0 0 35px rgba(16, 185, 129, 0.15);
+  }
+
+  .terminal-header {
+    background: #131c2e;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #1f293d;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .terminal-dots {
+    display: flex;
+    gap: 7px;
+  }
+
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dot-close {
+    background: #ef4444;
+  }
+  .dot-minimize {
+    background: #f59e0b;
+  }
+  .dot-maximize {
+    background: #10b981;
+  }
+
+  .terminal-title {
+    color: #94a3b8;
+    font-size: 0.78rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.02em;
+  }
+
+  .terminal-title i {
+    color: #10b981;
+  }
+
+  .terminal-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .terminal-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: rgba(100, 116, 139, 0.2);
+    color: #94a3b8;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+    letter-spacing: 0.05em;
+  }
+
+  .terminal-badge.running {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border-color: rgba(245, 158, 11, 0.4);
+    animation: blink 1s infinite;
+  }
+
+  .terminal-badge.passed {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border-color: rgba(16, 185, 129, 0.4);
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .terminal-btn-run {
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  }
+
+  .terminal-btn-run:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.5);
+  }
+
+  .terminal-btn-run:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .terminal-btn-reset {
+    background: rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+
+  .terminal-btn-reset:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+  }
+
+  .terminal-body {
+    padding: 18px 20px;
+    min-height: 220px;
+    max-height: 360px;
+    overflow-y: auto;
+    color: #e2e8f0;
+    line-height: 1.65;
+  }
+
+  .line {
+    margin-bottom: 6px;
+    word-break: break-word;
+  }
+
+  .prompt-line {
+    color: #e2e8f0;
+    font-weight: 600;
+  }
+
+  .prompt-user {
+    color: #34d399;
+  }
+  .prompt-dir {
+    color: #38bdf8;
+  }
+  .prompt-cmd {
+    color: #f1f5f9;
+  }
+
+  .text-dim {
+    color: #64748b;
+    font-size: 0.78rem;
+  }
+  .text-muted-cli {
+    color: #94a3b8;
+    margin: 10px 0;
+    font-size: 0.82rem;
+  }
+
+  :global(.test-step) {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 8px 0;
+    animation: fadeIn 0.25s ease-in-out;
+  }
+
+  :global(.test-check) {
+    color: #10b981;
+    font-weight: 700;
+  }
+
+  :global(.test-tag) {
+    color: #38bdf8;
+    font-weight: 600;
+  }
+
+  :global(.test-name) {
+    color: #f1f5f9;
+    flex: 1;
+  }
+
+  :global(.test-duration) {
+    color: #64748b;
+    font-size: 0.78rem;
+  }
+
+  :global(.test-summary-box) {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 8px;
+    color: #34d399;
+    font-weight: 600;
+    font-size: 0.82rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  :global(.test-summary-line) {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .terminal-title {
+      display: none;
+    }
+    .terminal-header {
+      justify-content: space-between;
+    }
+    .terminal-body {
+      font-size: 0.76rem;
+      padding: 14px;
+    }
+  }
+</style>
+
+<script>
+  const testSteps = [
+    {
+      tag: "[Playwright API]",
+      name: "Authentication, Payload Schema & REST Endpoints verification",
+      dur: "42ms",
+    },
+    {
+      tag: "[Cypress E2E]",
+      name: "Critical Web User Journeys & End-to-End Workflows",
+      dur: "680ms",
+    },
+    {
+      tag: "[Katalon Mobile]",
+      name: "Mobile App Navigation & Form Input Validation test",
+      dur: "510ms",
+    },
+    {
+      tag: "[Regression & UAT]",
+      name: "Comprehensive Regression Suite & Boundary Edge Cases",
+      dur: "340ms",
+    },
+  ];
+
+  const runBtn = document.getElementById(
+    "runTestsBtn",
+  ) as HTMLButtonElement | null;
+  const resetBtn = document.getElementById(
+    "resetTestsBtn",
+  ) as HTMLButtonElement | null;
+  const badge = document.getElementById("terminalStatusBadge");
+  const stream = document.getElementById("terminalStream");
+  const placeholder = document.getElementById("terminalPlaceholder");
+  const screen = document.getElementById("terminalScreen");
+
+  let isRunning = false;
+
+  async function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async function startTestRun() {
+    if (isRunning || !stream || !badge || !runBtn) return;
+    isRunning = true;
+    runBtn.disabled = true;
+    runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Executing...';
+    badge.className = "terminal-badge running";
+    badge.textContent = "TESTING...";
+    if (placeholder) placeholder.style.display = "none";
+    stream.innerHTML = "";
+
+    await sleep(400);
+
+    for (const step of testSteps) {
+      const stepEl = document.createElement("div");
+      stepEl.className = "test-step";
+      stepEl.innerHTML = `
+        <span class="test-check">✔</span>
+        <span class="test-tag">${step.tag}</span>
+        <span class="test-name">${step.name}</span>
+        <span class="test-duration">(${step.dur})</span>
+      `;
+      stream.appendChild(stepEl);
+      if (screen) screen.scrollTop = screen.scrollHeight;
+      await sleep(550);
+    }
+
+    await sleep(300);
+
+    const summaryEl = document.createElement("div");
+    summaryEl.className = "test-summary-box";
+    summaryEl.innerHTML = `
+      <div class="test-summary-line">
+        <span>Test Suites: 4 passed, 4 total</span>
+        <span>Coverage: 100% Critical Paths</span>
+      </div>
+      <div class="test-summary-line">
+        <span>Total Tests: 32 tests passed (0 failed, 0 flaky)</span>
+        <span>Time: 1.804s</span>
+      </div>
+      <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(16, 185, 129, 0.4); color: #6ee7b7;">
+        ✔ ALL SUITES PASSED — Zero Defects Detected. Ready for Production Deployment.
+      </div>
+    `;
+    stream.appendChild(summaryEl);
+    if (screen) screen.scrollTop = screen.scrollHeight;
+
+    badge.className = "terminal-badge passed";
+    badge.textContent = "PASSED ✔";
+    runBtn.style.display = "none";
+    if (resetBtn) resetBtn.style.display = "inline-flex";
+    isRunning = false;
+  }
+
+  function resetTerminal() {
+    if (!stream || !badge || !runBtn || !resetBtn) return;
+    stream.innerHTML = "";
+    if (placeholder) placeholder.style.display = "block";
+    badge.className = "terminal-badge";
+    badge.textContent = "READY";
+    runBtn.style.display = "inline-flex";
+    runBtn.disabled = false;
+    runBtn.innerHTML = '<i class="fas fa-play"></i> Run Test Suite';
+    resetBtn.style.display = "none";
+  }
+
+  runBtn?.addEventListener("click", startTestRun);
+  resetBtn?.addEventListener("click", resetTerminal);
+</script>

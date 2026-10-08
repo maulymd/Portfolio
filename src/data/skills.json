@@ -1,0 +1,44 @@
+[
+  {
+    "id": "automation",
+    "titleKey": "skills.pillar1.title",
+    "descKey": "skills.pillar1.desc",
+    "icon": "fas fa-robot",
+    "skills": [
+      "Playwright",
+      "Cypress",
+      "Katalon Studio",
+      "API Automation",
+      "JavaScript",
+      "Groovy Script"
+    ]
+  },
+  {
+    "id": "manual",
+    "titleKey": "skills.pillar2.title",
+    "descKey": "skills.pillar2.desc",
+    "icon": "fas fa-clipboard-check",
+    "skills": [
+      "Test Case Design",
+      "UAT Testing",
+      "Regression Testing",
+      "Sanity & Smoke Testing",
+      "Boundary Value Analysis",
+      "Defect Lifecycle"
+    ]
+  },
+  {
+    "id": "tools",
+    "titleKey": "skills.pillar3.title",
+    "descKey": "skills.pillar3.desc",
+    "icon": "fas fa-tools",
+    "skills": [
+      "Jira",
+      "Postman",
+      "Chrome DevTools",
+      "Figma (PRD Analysis)",
+      "Git & GitHub",
+      "Agile / Scrum"
+    ]
+  }
+]

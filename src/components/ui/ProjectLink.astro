@@ -1,0 +1,18 @@
+---
+interface Props {
+  href?: string;
+  icon?: string;
+  text?: string;
+  i18nKey?: string;
+  target?: string;
+  onclick?: string;
+}
+
+const { href = "javascript:void(0)", icon, text, i18nKey, target, onclick } = Astro.props;
+---
+
+<a href={href} target={target} onclick={onclick} class="project-link">
+  {icon && <i class={icon}></i>}
+  {i18nKey ? <span data-i18n={i18nKey}>{text}</span> : text}
+  {" →"}
+</a>
