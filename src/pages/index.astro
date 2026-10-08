@@ -132,7 +132,9 @@ import translations from "../data/translations.json";
   );
 
   document
-    .querySelectorAll(".card, .org-card, .grid, .skills-wrapper, .contact-form, .skill-pillar-card, .test-terminal-wrapper")
+    .querySelectorAll(
+      ".card, .org-card, .grid, .skills-wrapper, .contact-form, .skill-pillar-card, .test-terminal-wrapper",
+    )
     .forEach((el) => {
       el.style.opacity = "0";
       el.style.transform = "translateY(20px)";
