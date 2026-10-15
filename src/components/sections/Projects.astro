@@ -1,5 +1,5 @@
 ---
-import projects from "../../data/projects.json";
+import { projects } from "../../data/projects";
 import Card from "../ui/Card.astro";
 import SectionTitle from "../ui/SectionTitle.astro";
 import SkillTag from "../ui/SkillTag.astro";
@@ -15,7 +15,7 @@ import SkillTag from "../ui/SkillTag.astro";
     <!-- Project Filter Buttons -->
     <div class="project-filter-bar">
       <button class="project-filter-btn active" data-filter="all">
-        <i class="fas fa-layer-group"></i> Semua Proyek
+        <i class="fas fa-layer-group"></i> Semua Proyek ({projects.length})
       </button>
       <button class="project-filter-btn" data-filter="automation">
         <i class="fas fa-robot"></i> Automation (E2E)
@@ -26,6 +26,9 @@ import SkillTag from "../ui/SkillTag.astro";
       <button class="project-filter-btn" data-filter="mobile">
         <i class="fas fa-mobile-alt"></i> Mobile QA
       </button>
+      <button class="project-filter-btn" data-filter="web">
+        <i class="fas fa-laptop-code"></i> Web QA
+      </button>
       <button class="project-filter-btn" data-filter="manual">
         <i class="fas fa-clipboard-check"></i> Manual & UAT
       </button>
@@ -35,28 +38,65 @@ import SkillTag from "../ui/SkillTag.astro";
       {
         projects.map((proj) => (
           <div class="project-item" data-category={proj.category || "all"}>
-            <Card featured={proj.featured}>
-              <h3>
-                <i
-                  class={proj.icon}
-                  style="color: var(--accent); margin-right: 8px;"
-                />{" "}
-                <span data-i18n={proj.titleKey}>{proj.titleKey}</span>
-              </h3>
-              <div class="date">
-                <span data-i18n={proj.dateKey}>{proj.dateKey}</span>
-              </div>
-              <p>
-                <span data-i18n={proj.descKey}>{proj.descKey}</span>
-              </p>
-
-              {proj.tags && (
-                <div class="skills-wrapper" style="margin-top: 14px;">
-                  {proj.tags.map((tag) => (
-                    <SkillTag name={tag} />
-                  ))}
+            <Card featured={proj.featured} class="project-card-custom">
+              {proj.image && (
+                <div class="card-thumb-wrap">
+                  <img
+                    src={proj.image}
+                    alt={proj.title}
+                    class="card-thumb-img"
+                    loading="lazy"
+                    onerror="this.onerror=null; this.closest('.card-thumb-wrap').style.display='none';"
+                  />
+                  <span class="role-pill">
+                    <i class="fas fa-user-shield" /> {proj.role}
+                  </span>
                 </div>
               )}
+
+              <div class="project-card-body">
+                <div class="project-meta-row">
+                  <span class="project-date">
+                    <i class="far fa-calendar-alt" /> {proj.date}
+                  </span>
+                  {!proj.image && (
+                    <span class="role-pill-inline">
+                      <i class="fas fa-user-shield" /> {proj.role}
+                    </span>
+                  )}
+                </div>
+
+                <h3 class="project-card-title">
+                  <a href={`/projects/${proj.id}`} class="title-link">
+                    {proj.title}
+                  </a>
+                </h3>
+
+                <p class="project-card-desc">{proj.description}</p>
+
+                {proj.techStack && proj.techStack.length > 0 && (
+                  <div
+                    class="skills-wrapper"
+                    style="margin-top: 14px; margin-bottom: 20px;"
+                  >
+                    {proj.techStack.slice(0, 4).map((tech) => (
+                      <SkillTag name={tech.name} />
+                    ))}
+                    {proj.techStack.length > 4 && (
+                      <span class="more-stack-pill">
+                        +{proj.techStack.length - 4}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <div class="project-card-action">
+                  <a href={`/projects/${proj.id}`} class="view-detail-btn">
+                    <span>Lihat Detail & Studi Kasus</span>
+                    <i class="fas fa-arrow-right" />
+                  </a>
+                </div>
+              </div>
             </Card>
           </div>
         ))
@@ -114,6 +154,158 @@ import SkillTag from "../ui/SkillTag.astro";
 
   .project-item {
     transition: all 0.35s ease;
+    display: flex;
+  }
+
+  .project-item :global(.card) {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+  }
+
+  .card-thumb-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-tertiary);
+    overflow: hidden;
+  }
+
+  .card-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .project-item :global(.card):hover .card-thumb-img {
+    transform: scale(1.05);
+  }
+
+  .role-pill {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(6px);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .role-pill i {
+    color: var(--accent-light);
+  }
+
+  .project-card-body {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .project-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .project-date {
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .role-pill-inline {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  .project-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.35;
+  }
+
+  .title-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .title-link:hover {
+    color: var(--accent);
+  }
+
+  .project-card-desc {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .more-stack-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .project-card-action {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .view-detail-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 6px 0;
+    transition: all 0.2s ease;
+  }
+
+  .view-detail-btn i {
+    transition: transform 0.2s ease;
+  }
+
+  .view-detail-btn:hover {
+    color: var(--accent-light);
+  }
+
+  .view-detail-btn:hover i {
+    transform: translateX(5px);
   }
 
   .project-item.hidden {

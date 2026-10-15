@@ -1,0 +1,1207 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navbar from "../../components/layout/Navbar.astro";
+import Footer from "../../components/layout/Footer.astro";
+import ImageModal from "../../components/modals/ImageModal.astro";
+import { projects, type Project } from "../../data/projects";
+import translations from "../../data/translations.json";
+
+export async function getStaticPaths() {
+  return projects.map((project, index) => {
+    const prevProject = index > 0 ? projects[index - 1] : projects[projects.length - 1];
+    const nextProject = index < projects.length - 1 ? projects[index + 1] : projects[0];
+
+    return {
+      params: { id: project.id },
+      props: { project, prevProject, nextProject },
+    };
+  });
+}
+
+interface Props {
+  project: Project;
+  prevProject: Project;
+  nextProject: Project;
+}
+
+const { project, prevProject, nextProject } = Astro.props;
+
+// Category label helper
+const categoryLabels: Record<string, { label: string; icon: string }> = {
+  automation: { label: "Test Automation (E2E)", icon: "fas fa-robot" },
+  manual: { label: "Manual QA & UAT", icon: "fas fa-clipboard-check" },
+  mobile: { label: "Mobile QA", icon: "fas fa-mobile-alt" },
+  web: { label: "Web QA", icon: "fas fa-laptop-code" },
+  api: { label: "API Testing", icon: "fas fa-network-wired" },
+};
+
+const categoryInfo = project.category && categoryLabels[project.category]
+  ? categoryLabels[project.category]
+  : { label: "Quality Assurance", icon: "fas fa-check-double" };
+---
+
+<BaseLayout
+  title={`${project.title} - Case Study | Maulana Yusuf Ahmadi`}
+  description={project.description}
+  ogTitle={`${project.title} - Quality Assurance Case Study`}
+  ogDescription={project.description}
+>
+  <ImageModal />
+  <Navbar />
+
+  <main class="project-detail-page">
+    <div class="container">
+      <!-- Breadcrumb & Back Button -->
+      <nav class="project-breadcrumb">
+        <a href="/#projects" class="back-link">
+          <i class="fas fa-arrow-left"></i>
+          <span data-i18n="pdetail.back">Kembali ke Semua Proyek</span>
+        </a>
+        <div class="breadcrumb-trail">
+          <a href="/" data-i18n="pdetail.home">Beranda</a>
+          <span class="separator">/</span>
+          <a href="/#projects" data-i18n="pdetail.projects">Proyek</a>
+          <span class="separator">/</span>
+          <span class="current breadcrumb-title">{project.title}</span>
+        </div>
+      </nav>
+
+      <!-- Project Header -->
+      <header class="project-header">
+        <div class="header-badges">
+          <span class="badge badge-role">
+            <i class="fas fa-user-shield"></i>
+            <span id="projectRoleText">{project.role}</span>
+          </span>
+          <span class="badge badge-category">
+            <i class={categoryInfo.icon}></i>
+            <span id="projectCatText" data-cat-key={`cat.${project.category}`}>{categoryInfo.label}</span>
+          </span>
+          <span class="badge badge-date">
+            <i class="far fa-calendar-alt"></i>
+            <span id="projectDateText">{project.date}</span>
+          </span>
+        </div>
+
+        <h1 class="project-title" id="projectTitle">{project.title}</h1>
+        <p class="project-lead" id="projectLead">{project.description}</p>
+      </header>
+
+      <!-- Featured Image Banner -->
+      {project.image && (
+        <div class="featured-media-card">
+          <div class="media-wrapper">
+            <img
+              src={project.image}
+              alt={project.title}
+              class="featured-img zoomable-trigger"
+              data-src={project.image}
+              data-caption={project.title}
+              onerror="this.onerror=null; this.closest('.featured-media-card').classList.add('has-fallback');"
+            />
+            <div class="media-overlay">
+              <span class="zoom-hint">
+                <i class="fas fa-search-plus"></i> <span data-i18n="pdetail.zoom">Klik gambar untuk memperbesar</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <!-- Layout Grid: Main Content + Sidebar -->
+      <div class="project-layout-grid">
+        <!-- Main Content Area -->
+        <div class="project-main-content">
+          <!-- Long Description / Detailed Background -->
+          {project.longDescription && project.longDescription.length > 0 && (
+            <section class="content-block intro-block">
+              <h2 class="block-title">
+                <i class="fas fa-align-left"></i> <span data-i18n="pdetail.overview">Ringkasan & Tanggung Jawab</span>
+              </h2>
+              <div class="block-text" id="projectLongDesc">
+                {project.longDescription.map((paragraph) => (
+                  <p>{paragraph}</p>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Color Palette (if any) -->
+          {project.colorPalette && project.colorPalette.length > 0 && (
+            <section class="content-block palette-block">
+              <h2 class="block-title">
+                <i class="fas fa-palette"></i> <span data-i18n="pdetail.palette">Design System & Color Palette</span>
+              </h2>
+              <p class="palette-desc" data-i18n="pdetail.paletteDesc">
+                Palet warna UI/UX yang diterapkan dalam perancangan antarmuka sistem:
+              </p>
+              <div class="palette-grid">
+                {project.colorPalette.map((color) => (
+                  <div
+                    class="palette-card"
+                    data-color={color}
+                    title="Klik untuk menyalin HEX"
+                  >
+                    <div
+                      class="palette-color"
+                      style={`background-color: ${color};`}
+                    />
+                    <div class="palette-info">
+                      <span class="palette-hex">{color}</span>
+                      <span class="copy-label">
+                        <i class="far fa-copy"></i> <span data-i18n="pdetail.copy">Salin</span>
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Mockups Gallery (if any) -->
+          {project.mockups && project.mockups.length > 0 && (
+            <section class="content-block mockups-block">
+              <h2 class="block-title">
+                <i class="fas fa-layer-group"></i> <span data-i18n="pdetail.mockups">Interface & Device Mockups</span>
+              </h2>
+              <div class="mockups-grid">
+                {project.mockups.map((mockup, idx) => (
+                  <div class="mockup-card">
+                    <img
+                      src={mockup}
+                      alt={`${project.title} Mockup ${idx + 1}`}
+                      class="mockup-img zoomable-trigger"
+                      data-src={mockup}
+                      data-caption={`${project.title} - Mockup #${idx + 1}`}
+                      loading="lazy"
+                    />
+                    <div class="mockup-overlay">
+                      <i class="fas fa-expand"></i>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Project Sections (Overview, Testing Scope, Automation, Bug Reports, etc.) -->
+          {project.sections && project.sections.map((section, sIdx) => (
+            <section class="content-block section-block" data-section-index={sIdx}>
+              <h2 class="block-title">
+                <i class="fas fa-tasks"></i> <span class="section-heading-text">{section.heading}</span>
+              </h2>
+
+              <div class="block-text section-content-text">
+                {section.content.map((p) => (
+                  <p>{p}</p>
+                ))}
+              </div>
+
+              <!-- Section Images (Screenshots / Test Artifacts) -->
+              {section.images && section.images.length > 0 && (
+                <div class="section-gallery">
+                  <div class="gallery-header">
+                    <span class="gallery-label">
+                      <i class="fas fa-images"></i> <span data-i18n="pdetail.evidence">Bukti Pengujian & Dokumentasi</span> ({section.images.length} <span data-i18n="pdetail.images">Gambar</span>)
+                    </span>
+                  </div>
+                  <div class="gallery-grid">
+                    {section.images.map((imgSrc, imgIdx) => {
+                      const imgName = imgSrc.split('/').pop()?.replace(/\.[^/.]+$/, '') || `Screenshot ${imgIdx + 1}`;
+                      return (
+                        <div class="gallery-item">
+                          <div class="gallery-image-box">
+                            <img
+                              src={imgSrc}
+                              alt={imgName}
+                              class="gallery-img zoomable-trigger"
+                              data-src={imgSrc}
+                              data-caption={`${project.title} - ${section.heading}: ${imgName}`}
+                              loading="lazy"
+                            />
+                            <div class="gallery-item-overlay">
+                              <i class="fas fa-search-plus"></i>
+                              <span data-i18n="pdetail.enlarge">Perbesar</span>
+                            </div>
+                          </div>
+                          <span class="gallery-item-caption">{imgName}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </section>
+          ))}
+        </div>
+
+        <!-- Sidebar / Meta Card -->
+        <aside class="project-sidebar">
+          <div class="sidebar-sticky-card">
+            <h3 class="sidebar-heading">
+              <i class="fas fa-info-circle"></i> <span data-i18n="pdetail.summary">Ringkasan Proyek</span>
+            </h3>
+
+            <div class="meta-list">
+              <div class="meta-item">
+                <span class="meta-label" data-i18n="pdetail.role">Peran Utama</span>
+                <span class="meta-value role-value" id="sidebarRole">{project.role}</span>
+              </div>
+
+              <div class="meta-item">
+                <span class="meta-label" data-i18n="pdetail.timeline">Periode Waktu</span>
+                <span class="meta-value" id="sidebarDate">{project.date}</span>
+              </div>
+
+              <div class="meta-item">
+                <span class="meta-label" data-i18n="pdetail.category">Kategori QA</span>
+                <span class="meta-value" id="sidebarCat">{categoryInfo.label}</span>
+              </div>
+            </div>
+
+            <!-- Tech Stack & Tools -->
+            {project.techStack && project.techStack.length > 0 && (
+              <div class="tech-stack-section">
+                <h4 class="tech-stack-heading">
+                  <i class="fas fa-tools"></i> <span data-i18n="pdetail.stack">Tech Stack & Tools</span>
+                </h4>
+                <div class="tech-stack-list">
+                  {project.techStack.map((tech) => (
+                    <div class="tech-item-pill">
+                      {tech.icon && (
+                        <img
+                          src={tech.icon}
+                          alt={tech.name}
+                          class="tech-icon"
+                          onerror="this.style.display='none'"
+                        />
+                      )}
+                      <span class="tech-name">{tech.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- CTA Card -->
+            <div class="sidebar-cta">
+              <h4 data-i18n="pdetail.discuss">Diskusi Proyek</h4>
+              <p data-i18n="pdetail.discussDesc">Tertarik dengan metodologi QA atau hasil pengujian di proyek ini?</p>
+              <a href="/#contact" class="btn btn-primary btn-block">
+                <i class="fas fa-paper-plane"></i> <span data-i18n="pdetail.contactBtn">Hubungi Saya</span>
+              </a>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Bottom Navigation: Prev / Next Projects -->
+      <nav class="project-bottom-nav">
+        <a href={`/projects/${prevProject.id}`} class="bottom-nav-card prev-card">
+          <div class="nav-arrow">
+            <i class="fas fa-arrow-left"></i>
+          </div>
+          <div class="nav-text">
+            <span class="nav-sub" data-i18n="pdetail.prev">Proyek Sebelumnya</span>
+            <span class="nav-title" id="prevProjectTitle">{prevProject.title}</span>
+          </div>
+        </a>
+
+        <a href="/#projects" class="bottom-nav-center" title="Kembali ke Daftar Proyek">
+          <i class="fas fa-th-large"></i>
+          <span data-i18n="pdetail.all">Semua Proyek</span>
+        </a>
+
+        <a href={`/projects/${nextProject.id}`} class="bottom-nav-card next-card">
+          <div class="nav-text">
+            <span class="nav-sub" data-i18n="pdetail.next">Proyek Selanjutnya</span>
+            <span class="nav-title" id="nextProjectTitle">{nextProject.title}</span>
+          </div>
+          <div class="nav-arrow">
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </a>
+      </nav>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  /* ==================== PROJECT DETAIL STYLES ==================== */
+  .project-detail-page {
+    padding-top: 100px;
+    padding-bottom: 80px;
+    min-height: 100vh;
+  }
+
+  /* Breadcrumb */
+  .project-breadcrumb {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: var(--tag-bg);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    transition: all 0.25s ease;
+  }
+
+  .back-link:hover {
+    transform: translateX(-4px);
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .breadcrumb-trail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+  }
+
+  .breadcrumb-trail a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .breadcrumb-trail a:hover {
+    color: var(--accent);
+  }
+
+  .breadcrumb-trail .separator {
+    color: var(--text-muted);
+  }
+
+  .breadcrumb-trail .current {
+    color: var(--accent);
+    font-weight: 600;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Header */
+  .project-header {
+    margin-bottom: 32px;
+  }
+
+  .header-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .badge-role {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: #ffffff;
+    box-shadow: 0 4px 12px var(--accent-glow);
+  }
+
+  .badge-category {
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+
+  .badge-date {
+    background: var(--card-bg);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .project-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .project-lead {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 860px;
+  }
+
+  /* Featured Media Card */
+  .featured-media-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 12px;
+    margin-bottom: 48px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .media-wrapper {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bg-tertiary);
+    cursor: pointer;
+    min-height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .featured-img {
+    width: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .media-wrapper:hover .featured-img {
+    transform: scale(1.02);
+  }
+
+  .media-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .media-wrapper:hover .media-overlay {
+    opacity: 1;
+  }
+
+  .zoom-hint {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transform: translateY(10px);
+    transition: transform 0.25s ease;
+  }
+
+  .media-wrapper:hover .zoom-hint {
+    transform: translateY(0);
+  }
+
+  /* Layout Grid */
+  .project-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 40px;
+    margin-bottom: 60px;
+  }
+
+  /* Content Blocks */
+  .content-block {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+  }
+
+  .block-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 12px;
+  }
+
+  .block-title i {
+    color: var(--accent);
+    font-size: 1.25rem;
+  }
+
+  .block-text {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-size: 1.02rem;
+  }
+
+  .block-text p {
+    margin-bottom: 16px;
+  }
+
+  .block-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Color Palette */
+  .palette-desc {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+  }
+
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 16px;
+  }
+
+  .palette-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .palette-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    border-color: var(--accent);
+  }
+
+  .palette-color {
+    height: 75px;
+    width: 100%;
+    transition: transform 0.2s;
+  }
+
+  .palette-info {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: var(--card-bg);
+  }
+
+  .palette-hex {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    letter-spacing: 0.05em;
+  }
+
+  .copy-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Mockups Gallery */
+  .mockups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+  }
+
+  .mockup-card {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mockup-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .mockup-card:hover .mockup-img {
+    transform: scale(1.05);
+  }
+
+  .mockup-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.4rem;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .mockup-card:hover .mockup-overlay {
+    opacity: 1;
+  }
+
+  /* Section Gallery (Screenshots / Artifacts) */
+  .section-gallery {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px dashed var(--border);
+  }
+
+  .gallery-header {
+    margin-bottom: 16px;
+  }
+
+  .gallery-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .gallery-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .gallery-image-box {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    aspect-ratio: 16 / 10;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-image-box:hover .gallery-img {
+    transform: scale(1.04);
+  }
+
+  .gallery-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .gallery-image-box:hover .gallery-item-overlay {
+    opacity: 1;
+  }
+
+  .gallery-item-caption {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  /* Sidebar */
+  .sidebar-sticky-card {
+    position: sticky;
+    top: 110px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+  }
+
+  .sidebar-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 12px;
+  }
+
+  .sidebar-heading i {
+    color: var(--accent);
+  }
+
+  .meta-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .meta-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+
+  .meta-value {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .role-value {
+    color: var(--accent);
+  }
+
+  /* Tech Stack */
+  .tech-stack-section {
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+
+  .tech-stack-heading {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .tech-stack-heading i {
+    color: var(--accent);
+  }
+
+  .tech-stack-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tech-item-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--tag-bg);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--tag-text);
+  }
+
+  .tech-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+  }
+
+  .tech-name {
+    line-height: 1;
+  }
+
+  /* Sidebar CTA */
+  .sidebar-cta {
+    background: var(--bg-tertiary);
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .sidebar-cta h4 {
+    font-size: 1rem;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+  }
+
+  .sidebar-cta p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  .btn-block {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  /* Bottom Nav */
+  .project-bottom-nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: center;
+    padding-top: 36px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+
+  .bottom-nav-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+
+  .bottom-nav-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+
+  .next-card {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .nav-arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--tag-bg);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+  }
+
+  .bottom-nav-card:hover .nav-arrow {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .nav-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .nav-sub {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .nav-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bottom-nav-center {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .bottom-nav-center:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .bottom-nav-center i {
+    font-size: 1.1rem;
+  }
+
+  /* Responsive Queries */
+  @media (max-width: 992px) {
+    .project-layout-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar-sticky-card {
+      position: static;
+    }
+
+    .project-title {
+      font-size: 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .project-detail-page {
+      padding-top: 85px;
+    }
+
+    .project-bottom-nav {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .bottom-nav-center {
+      order: 3;
+      padding: 12px;
+    }
+
+    .next-card {
+      text-align: left;
+      justify-content: flex-start;
+    }
+
+    .content-block {
+      padding: 22px;
+    }
+
+    .gallery-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script define:vars={{ translations, project, prevProject, nextProject }}>
+  window.translations = translations;
+  window.currentProject = project;
+  let currentLang = "id";
+
+  window.applyLanguage = function (lang) {
+    currentLang = lang;
+    const t = window.translations[lang];
+    if (!t) return;
+
+    // 1. Update all static labels with data-i18n
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (key && t[key]) {
+        el.innerHTML = t[key];
+      }
+    });
+
+    // 2. Update category labels
+    const catTextEl = document.getElementById("projectCatText");
+    if (catTextEl) {
+      const catKey = catTextEl.getAttribute("data-cat-key");
+      if (catKey && t[catKey]) {
+        catTextEl.textContent = t[catKey];
+        const sidebarCatEl = document.getElementById("sidebarCat");
+        if (sidebarCatEl) sidebarCatEl.textContent = t[catKey];
+      }
+    }
+
+    // 3. Update dynamic project content (Title, Role, Date, Lead, Long Description, Sections)
+    const isEn = lang === "en";
+    const pData = isEn && project.en ? project.en : project;
+
+    const titleEl = document.getElementById("projectTitle");
+    if (titleEl && pData.title) titleEl.textContent = pData.title;
+
+    const leadEl = document.getElementById("projectLead");
+    if (leadEl && pData.description) leadEl.textContent = pData.description;
+
+    const roleEl = document.getElementById("projectRoleText");
+    if (roleEl && pData.role) roleEl.textContent = pData.role;
+    const sbRole = document.getElementById("sidebarRole");
+    if (sbRole && pData.role) sbRole.textContent = pData.role;
+
+    const dateEl = document.getElementById("projectDateText");
+    if (dateEl && pData.date) dateEl.textContent = pData.date;
+    const sbDate = document.getElementById("sidebarDate");
+    if (sbDate && pData.date) sbDate.textContent = pData.date;
+
+    const breadcrumbTitle = document.querySelector(".breadcrumb-title");
+    if (breadcrumbTitle && pData.title) breadcrumbTitle.textContent = pData.title;
+
+    // Long description paragraphs
+    const longDescEl = document.getElementById("projectLongDesc");
+    if (longDescEl && pData.longDescription) {
+      longDescEl.innerHTML = pData.longDescription
+        .map((p) => `<p>${p}</p>`)
+        .join("");
+    }
+
+    // Dynamic Sections
+    if (pData.sections) {
+      document.querySelectorAll(".section-block").forEach((secEl) => {
+        const idx = parseInt(secEl.getAttribute("data-section-index") || "0", 10);
+        const secData = pData.sections[idx];
+        if (secData) {
+          const headingEl = secEl.querySelector(".section-heading-text");
+          if (headingEl) headingEl.textContent = secData.heading;
+          const contentEl = secEl.querySelector(".section-content-text");
+          if (contentEl) {
+            contentEl.innerHTML = secData.content
+              .map((p) => `<p>${p}</p>`)
+              .join("");
+          }
+        }
+      });
+    }
+
+    // Prev & Next project titles
+    const prevData = isEn && prevProject.en ? prevProject.en : prevProject;
+    const nextData = isEn && nextProject.en ? nextProject.en : nextProject;
+    const prevTitleEl = document.getElementById("prevProjectTitle");
+    if (prevTitleEl && prevData.title) prevTitleEl.textContent = prevData.title;
+    const nextTitleEl = document.getElementById("nextProjectTitle");
+    if (nextTitleEl && nextData.title) nextTitleEl.textContent = nextData.title;
+
+    // Navbar active switch state
+    const idBtn = document.getElementById("langIdBtn");
+    const enBtn = document.getElementById("langEnBtn");
+    if (idBtn && enBtn) {
+      if (lang === "id") {
+        idBtn.classList.add("active");
+        enBtn.classList.remove("active");
+      } else {
+        idBtn.classList.remove("active");
+        enBtn.classList.add("active");
+      }
+    }
+
+    localStorage.setItem("portfolioLang", lang);
+  };
+
+  window.setLanguage = function (lang) {
+    window.applyLanguage(lang);
+  };
+
+  // Image zoom trigger integration with existing ImageModal
+  document.querySelectorAll(".zoomable-trigger").forEach((el) => {
+    el.addEventListener("click", () => {
+      const src = el.getAttribute("data-src");
+      const caption = el.getAttribute("data-caption") || "";
+      if (src && window.openModal) {
+        window.openModal(src, caption);
+      }
+    });
+  });
+
+  // Color palette copy to clipboard
+  document.querySelectorAll(".palette-card").forEach((card) => {
+    card.addEventListener("click", async () => {
+      const color = card.getAttribute("data-color");
+      if (!color) return;
+
+      try {
+        await navigator.clipboard.writeText(color);
+        const copyLabel = card.querySelector(".copy-label");
+        if (copyLabel) {
+          const originalText = copyLabel.innerHTML;
+          const copiedText = (window.translations && window.translations[currentLang]?.["pdetail.copied"]) || "Tersalin!";
+          copyLabel.innerHTML = `<i class="fas fa-check" style="color: var(--accent);"></i> ${copiedText}`;
+          setTimeout(() => {
+            copyLabel.innerHTML = originalText;
+          }, 1800);
+        }
+      } catch (err) {
+        console.error("Failed to copy color code", err);
+      }
+    });
+  });
+
+  // On initial page load: apply preferred language from localStorage
+  const savedLang = localStorage.getItem("portfolioLang");
+  if (savedLang && (savedLang === "id" || savedLang === "en")) {
+    window.applyLanguage(savedLang);
+  } else {
+    window.applyLanguage("id");
+  }
+</script>
