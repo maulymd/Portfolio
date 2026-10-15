@@ -124,4 +124,89 @@ export const projects: Project[] = [
       ],
     },
   },
+  {
+    id: 'cypress-rejanglebong',
+    title: 'APS Rejang Lebong - Cypress E2E Automation',
+    role: 'QA Automation Engineer',
+    date: '2025',
+    category: 'automation',
+    featured: true,
+    description:
+      'Pengembangan framework pengujian otomatisasi End-to-End (E2E) menggunakan Cypress untuk memvalidasi alur administrasi Data Pemilih Tetap (DPT) pada aplikasi APS Rejang Lebong.',
+    longDescription: [
+      'Proyek pengujian otomatisasi berbasis Cypress untuk memvalidasi integritas fungsional aplikasi Sistem Informasi Pemilihan (APS Rejang Lebong).',
+      'Fokus pengujian berpusat pada modul Data Pemilih Tetap (DPT) yang menuntut keandalan tinggi dalam validasi nomor identitas kependudukan (NIK & Nomor KK 16 digit), pemilihan wilayah dinamis (Select2 Kelurahan), serta integritas penyimpanan data pemilih ke basis data.',
+      'Rangkaian skrip pengujian dikembangkan secara modular ke dalam suite TS-VOTER (TS-VOTER-01 hingga TS-VOTER-05) yang mencakup positive test, negative flow, boundary value analysis, dan tangkapan layar otomatis saat kegagalan asersi.',
+    ],
+    image: '/images/projects/rejanglebong.png',
+    techStack: [
+      { name: 'Cypress E2E' },
+      { name: 'JavaScript' },
+      { name: 'Node.js' },
+      { name: 'End-to-End Testing' }
+    ],
+    sections: [
+      {
+        heading: 'Latar Belakang & Ruang Lingkup Sistem',
+        content: [
+          'Aplikasi APS Rejang Lebong (https://aps-rejanglebong.skwn.dev/dev/) digunakan untuk mengelola data pemilih tetap di tingkat kabupaten. Validasi input yang ketat mutlak diperlukan agar tidak terjadi duplikasi NIK atau anomali data pemilih.',
+          'Ruang lingkup pengujian mencakup autentikasi akun petugas, akses menu Data Pemilih Tetap, pengisian formulir biodata lengkap, dan verifikasi status penyimpanan data.',
+        ],
+      },
+      {
+        heading: 'Arsitektur Test Suite Cypress (TS-VOTER)',
+        content: [
+          'Menyusun skrip pengujian modular menggunakan Cypress dengan pembagian suite TS-VOTER-01 hingga TS-VOTER-05 untuk memvalidasi skenario berbeda secara terisolasi.',
+          'Memanfaatkan hook beforeEach() untuk alur login otomatis yang aman menggunakan environment variables (Cypress.env) tanpa mengekspos kredensial sensitif di kode sumber.',
+          'Mengotomasi interaksi elemen UI kompleks seperti dropdown pencarian Select2, kalender datepicker tanggal lahir, serta validasi radio button jenis kelamin dan status perkawinan.',
+        ],
+      },
+      {
+        heading: 'Eksekusi Pengujian & Deteksi Defect',
+        content: [
+          'Mengeksekusi test runner Cypress pada browser Chrome/Electron dalam mode headless dan headed.',
+          'Fitur automated failure screenshot berhasil menangkap titik kegagalan asersi (seperti pada TS-VOTER-05-007) sehingga mempercepat proses debugging dan verifikasi bug fix oleh developer.',
+          'Kode sumber lengkap dan struktur test suite tersedia di repositori publik GitHub: github.com/maulymd/Automation-Rejanglebong.',
+        ],
+        images: ['/images/projects/rejanglebong/TS-VOTER-05-failed.png'],
+      },
+    ],
+    en: {
+      title: 'APS Rejang Lebong - Cypress E2E Automation',
+      role: 'QA Automation Engineer',
+      date: '2025',
+      description:
+        'Development of an End-to-End (E2E) test automation framework using Cypress to validate voter administration workflows (DPT) on the APS Rejang Lebong application.',
+      longDescription: [
+        'An automated testing initiative using Cypress to guarantee functional integrity on the APS Rejang Lebong voter management web system.',
+        'The primary test scope focused on the Voter Registry (DPT) module, demanding strict validation for 16-digit national ID (NIK & Family Card) inputs, dynamic Select2 dropdowns, and database record assertions.',
+        'Test scripts were structured into modular suites (TS-VOTER-01 through TS-VOTER-05) covering positive paths, boundary tests, and automatic failure screenshot capture.',
+      ],
+      sections: [
+        {
+          heading: 'Background & Testing Scope',
+          content: [
+            'The APS Rejang Lebong platform handles regional voter administration. Strict input validation is vital to eliminate duplicate voter registrations and data discrepancies.',
+            'Testing scope encompassed operator authentication, DPT navigation, comprehensive demographic form submissions, and persistence verification.',
+          ],
+        },
+        {
+          heading: 'Cypress Test Suite Architecture (TS-VOTER)',
+          content: [
+            'Architected modular Cypress test suites (TS-VOTER-01 to TS-VOTER-05) to isolate and systematically validate different validation rules.',
+            'Implemented beforeEach() hooks for secure automated authentication leveraging environment variables (Cypress.env).',
+            'Automated complex UI elements including Select2 search dropdowns, datepicker modals, and radio button selectors.',
+          ],
+        },
+        {
+          heading: 'Execution & Failure Detection',
+          content: [
+            'Executed Cypress test suites across headless and headed browser runners.',
+            'Leveraged automated failure screenshot capture (e.g. TS-VOTER-05-007) to expedite defect root-cause analysis and verification.',
+            'Full test code and configurations are accessible on GitHub: github.com/maulymd/Automation-Rejanglebong.',
+          ],
+        },
+      ],
+    },
+  },
 ];

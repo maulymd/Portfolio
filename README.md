@@ -38,6 +38,7 @@ Portofolio profesional **Software Quality Assurance (QA) Engineer** milik **Maul
 
 | Proyek                                                  | Peran             | Kategori     | Tools Utama                                   |
 | :------------------------------------------------------ | :---------------- | :----------- | :-------------------------------------------- |
+| **APS Rejang Lebong - Cypress E2E Automation**          | QA Automation     | `automation` | Cypress, JavaScript, GitHub                   |
 | **APMNU Web & API Automation Testing**                  | QA Freelance      | `api`        | Playwright, TypeScript, Postman, Jira         |
 | **POS & CRM Web and Mobile Testing** _(Red Ant Colony)_ | Quality Assurance | `manual`     | Test Case Design, UAT, Sanity, Figma, Postman |
 | **Morclinic & Morhuman QA Testing** _(Morbis)_          | QA Intern         | `automation` | Cypress E2E, Manual E2E, Postman              |
