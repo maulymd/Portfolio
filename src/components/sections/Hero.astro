@@ -15,16 +15,11 @@ const idTranslations = translations.id as Record<string, string>;
     </div>
     <h1>Maulana Yusuf Ahmadi</h1>
     <div class="typing-text" id="typingText"></div>
-    <div class="stats-container">
-      {personal.stats.map(stat => (
-        <div class="stat-item">
-          <div class="stat-number">{stat.number}</div>
-          <div class="stat-label" data-i18n={stat.labelKey}>
-            {idTranslations[stat.labelKey] || stat.labelKey}
-          </div>
-        </div>
-      ))}
-    </div>
+    <!-- Hero QA Tagline / Jargon -->
+    <p class="hero-tagline" data-i18n="hero.tagline">
+      {idTranslations["hero.tagline"] || "Memastikan setiap rilis andal, stabil, dan siap untuk pengguna melalui penjaminan kualitas yang komprehensif."}
+    </p>
+
     <div class="contact-info-bar">
       <a href={`mailto:${personal.email}`}><i class="fas fa-envelope"></i> {personal.email}</a>
       <a href={`https://wa.me/${personal.whatsapp}`} target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> {personal.whatsappDisplay}</a>
@@ -38,6 +33,25 @@ const idTranslations = translations.id as Record<string, string>;
     <TestRunnerTerminal />
   </div>
 </section>
+
+<style>
+  .hero-tagline {
+    max-width: 660px;
+    margin: 12px auto 26px;
+    font-size: 1.12rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .hero-tagline {
+      font-size: 0.98rem;
+      margin: 10px auto 20px;
+      padding: 0 8px;
+    }
+  }
+</style>
 
 <script define:vars={{ roles: personal.roles }}>
   const words = roles && roles.length ? roles : ["Quality Assurance Engineer", "QA Automation Engineer", "Manual Tester", "Informatics Graduate UIN Sunan Kalijaga"];
