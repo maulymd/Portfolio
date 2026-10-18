@@ -40,6 +40,132 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'tokoqa-playwright-automation',
+    title: 'TokoQA - Enterprise E2E & API Test Automation Framework',
+    role: 'QA Automation Engineer',
+    date: 'Oktober 2026',
+    category: 'automation',
+    featured: false,
+    description:
+      'Framework automation pengujian E2E dan API komprehensif untuk platform e-commerce TokoQA menggunakan Playwright, TypeScript, Page Object Model, Contract Testing dengan Zod, dan Allure 3 Report.',
+    longDescription: [
+      'TokoQA adalah platform e-commerce modern dengan alur transaksi multi-langkah dan otentikasi multi-peran (Customer vs Admin). Proyek ini berfokus pada pembangunan framework pengujian otomatis dari nol (scratch) yang andal, modular, dan bebas dari flaky tests.',
+      'Arsitektur framework menggabungkan Page Object Model (POM), pengujian berbasis data (Data-Driven Testing), Contract Testing API menggunakan runtime schema validator Zod, simulasi kegagalan server melalui Network Mocking, serta pipeline CI/CD GitHub Actions dengan Allure 3 reporting.',
+    ],
+    image: '/images/projects/tokoqa/tokoQA.png',
+    techStack: [
+      { name: 'Playwright' },
+      { name: 'TypeScript' },
+      { name: 'Page Object Model' },
+      { name: 'Zod (Contract Testing)' },
+      { name: 'Allure 3 Report' },
+      { name: 'GitHub Actions (CI/CD)' },
+      { name: 'Network Mocking' },
+      { name: 'REST API Testing' },
+    ],
+    sections: [
+      {
+        heading: 'Latar Belakang & Tantangan Pengujian',
+        content: [
+          'Aplikasi e-commerce TokoQA memiliki dependensi transaksi yang ketat: mulai dari manajemen stok barang, validasi formulir checkout multi-langkah (Alamat, Pengiriman, Pembayaran), hingga kontrol akses berbasis peran (RBAC) antara Customer dan Admin.',
+          'Tantangan utama yang diselesaikan meliputi:',
+          '• Menghilangkan ketergantungan pada alur UI login yang lambat dan rentan flaky pada setiap test case.',
+          '• Memastikan integritas kontrak skema payload API antara backend dan frontend agar perubahan API tidak merusak UI tanpa terdeteksi.',
+          '• Memvalidasi kesiapan sistem dalam menangani kegagalan server kritis (500 Internal Server Error) melalui network mocking.',
+        ],
+      },
+      {
+        heading: 'Arsitektur Framework & Strategi Otomasi',
+        content: [
+          '1. Page Object Model (POM) Modular: Seluruh halaman utama (LoginPage, ShopPage, CheckoutPage, AdminPage, NavbarComponent) dienkapsulasi ke dalam class independen tanpa selector CSS/XPath rapuh di test spec.',
+          '2. Accessibility-First Locator: Mengutamakan locator ramah aksesibilitas seperti `getByRole()`, `getByLabel()`, dan `getByTestId()` untuk meningkatkan ketahanan selector terhadap perubahan UI.',
+          '3. Hybrid Authentication & Fast Checkout: Memanfaatkan custom fixture Playwright untuk mengotentikasi user via REST API dan menyuntikkan token JWT langsung ke `localStorage`, mempercepat durasi eksekusi pengujian hingga 3-5x lebih cepat dibanding login manual via UI.',
+          '4. Data-Driven Testing (DDT): Menguji variasi skenario negatif (password salah, akun terkunci, field alamat kosong) menggunakan dataset terstruktur dalam format JSON.',
+        ],
+        images: [
+          "/images/projects/tokoqa/pom.png",
+          "/images/projects/tokoqa/hybrid-test.png",
+          "/images/projects/tokoqa/data-driven.png",
+        ],
+      },
+      {
+        heading: 'API, Contract Testing & Network Mocking',
+        content: [
+          '• Contract Testing dengan Zod: Memvalidasi struktur dan tipe data response endpoint produk (`GET /api/products`) secara runtime terhadap TypeScript schema contract.',
+          '• API Business Logic Validation: Pengujian skenario edge-cases seperti penambahan kuantitas melebihi batas stok yang menghasilkan response status `409 Conflict`.',
+          '• Network Mocking (500 Error State): Menggunakan `page.route()` untuk mencegat request produk dan mengembalikan status 500 buatan, guna membuktikan bahwa UI menampilkan pesan error yang ramah pengguna beserta tombol retry.',
+        ],
+        images: [
+          "/images/projects/tokoqa/api-test.png",
+          "/images/projects/tokoqa/mock-test.png",
+        ],
+      },
+      {
+        heading: 'Hasil, Integrasi CI/CD & Pelaporan Allure 3',
+        content: [
+          '• 100% Pass Rate (23 Test Cases): Berhasil mengeksekusi 23 skenario pengujian (Smoke, Regression, API, Contract, Hybrid, Mocking) secara paralel dalam waktu kurang dari 45 detik.',
+          '• Zero Flakiness: Menerapkan web-first assertions dan auto-waiting tanpa satupun hardcoded sleep (`waitForTimeout`).',
+          '• Automated CI/CD Pipeline: Terintegrasi penuh dengan GitHub Actions yang otomatis mengeksekusi test pada setiap commit/pull request dengan manajemen credential aman via GitHub Secrets.',
+          '• Allure 3 Reporting (Java-Free): Integrasi pelaporan interaktif generasi terbaru Allure 3 yang langsung ter-generate dan tersimpan sebagai artefak build.',
+        ],
+        images: [
+          "/images/projects/tokoqa/test-result.png",
+          "/images/projects/tokoqa/allure-report.png",
+          "/images/projects/tokoqa/allure-report-details.png",
+        ],
+      },
+    ],
+    en: {
+      title: 'TokoQA - Enterprise E2E & API Test Automation Framework',
+      role: 'Lead QA Automation Engineer',
+      date: 'October 2026',
+      description:
+        'Comprehensive E2E and API test automation framework for TokoQA e-commerce platform built with Playwright, TypeScript, Page Object Model, Zod Contract Testing, and Allure 3 Report.',
+      longDescription: [
+        'TokoQA is a modern e-commerce platform featuring multi-step checkout workflows and role-based access control (Customer vs Admin). This project focused on building a resilient, scalable, and zero-flaky test automation framework from scratch.',
+        'The architecture incorporates the Page Object Model (POM), data-driven validation, runtime API contract testing via Zod schemas, critical failure simulation with network mocking, and an automated GitHub Actions CI/CD pipeline paired with Java-free Allure 3 reporting.',
+      ],
+      sections: [
+        {
+          heading: 'Background & Testing Challenges',
+          content: [
+            'The TokoQA platform demands strict business flow integrity: inventory stock tracking, 3-step checkout validation (Address, Shipping, Payment), and strict role segregation between Customers and Admins.',
+            'Key challenges tackled:',
+            '• Eliminating redundant, slow UI login steps across test suites to reduce test run duration and flakiness.',
+            '• Ensuring backend-to-frontend payload integrity through runtime API schema contract testing.',
+            '• Verifying system resilience and graceful degradation during critical server downtime (500 Internal Server Error) using network mocking.',
+          ],
+        },
+        {
+          heading: 'Framework Architecture & Automation Strategy',
+          content: [
+            '1. **Modular Page Object Model (POM):** Encapsulated all web pages and components into maintainable classes, strictly prohibiting brittle XPath/CSS selectors in test specs.',
+            '2. **Accessibility-First Locators:** Prioritized Playwright locators such as `getByRole()`, `getByLabel()`, and `getByTestId()` for resilient element targeting.',
+            '3. **Hybrid Authentication:** Implemented custom fixtures to authenticate via REST API and inject JWT tokens directly into `localStorage`, achieving a 3-5x execution speedup.',
+            '4. **Data-Driven Testing (DDT):** Automated negative test suites using parameterized external JSON datasets.',
+          ],
+        },
+        {
+          heading: 'API, Contract Testing & Network Mocking',
+          content: [
+            '• **Contract Testing with Zod:** Enforced runtime contract validation for product endpoints to preemptively catch breaking schema changes before reaching UI layers.',
+            '• **API Edge Case Testing:** Tested out-of-stock and inventory limits resulting in expected `409 Conflict` statuses.',
+            '• **Network Mocking (500 Error State):** Intercepted live traffic via `page.route()` to verify user-friendly UI fallback messaging and retry mechanisms during server failures.',
+          ],
+        },
+        {
+          heading: 'Results, CI/CD Pipeline & Allure 3 Reporting',
+          content: [
+            '• **100% Pass Rate across 23 Tests:** Executed full test suite (Smoke, Regression, API, Hybrid, Mocking) in parallel in under 45 seconds.',
+            '• **Zero Flakiness:** Achieved rock-solid test stability using web-first auto-waiting assertions with zero hardcoded delays.',
+            '• **CI/CD Automation:** Configured automated GitHub Actions workflows running headless browser checks with GitHub Secrets credential masking.',
+            '• **Allure 3 Reporting:** Deployed modern Java-free Allure 3 reports providing rich execution dashboards, screenshots, and trace artifacts.',
+          ],
+        },
+      ],
+    },
+  },
+  {
     id: 'apmnu-api-automation',
     title: 'APMNU - Web & API Automation Testing Suite',
     role: 'QA Automation Engineer',
